@@ -1,0 +1,45 @@
+<%- include("partials/header", { title: "Sak | Eksamen IT 2026" }) %>
+
+<section class="page-title">
+    <div class="container">
+        <p class="small-title"><%= issue.category %></p>
+        <h1><%= issue.title %></h1>
+        <p><strong>Status:</strong> <%= issue.status %></p>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container admin-layout">
+        <article class="admin-panel">
+            <h2>Beskrivelse</h2>
+            <p><%= issue.description %></p>
+            <p><strong>Laget av:</strong> <%= issue.createdBy.username %></p>
+            <p><strong>Dato:</strong> <%= issue.createdAt.toLocaleDateString("no-NO") %></p>
+        </article>
+
+        <article class="admin-panel">
+            <h2>Lærersvar</h2>
+            <p><%= issue.teacherResponse || "Ingen svar enda." %></p>
+
+            <% if (user.role === "lærer" || user.role === "admin") { %>
+                <form class="small-form" action="/issues/<%= issue._id %>/status" method="POST">
+                    <label for="status">Status</label>
+                    <select id="status" name="status">
+                        <option value="åpen" <%= issue.status === "åpen" ? "selected" : "" %>>Åpen</option>
+                        <option value="under arbeid" <%= issue.status === "under arbeid" ? "selected" : "" %>>Under arbeid</option>
+                        <option value="løst" <%= issue.status === "løst" ? "selected" : "" %>>Løst</option>
+                    </select>
+                    <button class="button" type="submit">Oppdater status</button>
+                </form>
+
+                <form class="small-form" action="/issues/<%= issue._id %>/teacher-response" method="POST">
+                    <label for="teacherResponse">Svar fra lærer</label>
+                    <textarea id="teacherResponse" name="teacherResponse" rows="5"><%= issue.teacherResponse %></textarea>
+                    <button class="button" type="submit">Lagre svar</button>
+                </form>
+            <% } %>
+        </article>
+    </div>
+</section>
+
+<%- include("partials/footer") %>

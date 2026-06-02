@@ -1,0 +1,30 @@
+<%- include("partials/header", { title: "Registrer bruker | Eksamen IT 2026" }) %>
+
+<section class="form-section">
+    <div class="container narrow">
+        <h1>Registrer bruker</h1>
+
+        <% if (error) { %>
+            <p class="error-message"><%= error %></p>
+        <% } %>
+
+        <form class="form-box" action="/register" method="POST">
+            <label for="username">Brukernavn</label>
+            <input id="username" name="username" type="text" required>
+
+            <label for="password">Passord</label>
+            <input id="password" name="password" type="password" required>
+
+            <label for="role">Rolle</label>
+            <select id="role" name="role" required>
+                <option value="elev">Elev</option>
+                <option value="lærer">Lærer</option>
+                <option value="admin">Admin</option>
+            </select>
+
+            <button class="button" type="submit">Registrer</button>
+        </form>
+    </div>
+</section>
+
+<%- include("partials/footer") %>

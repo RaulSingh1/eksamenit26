@@ -1,0 +1,26 @@
+<%- include("partials/header", { title: "Ny sak | Eksamen IT 2026" }) %>
+
+<section class="form-section">
+    <div class="container narrow">
+        <h1>Opprett ny sak</h1>
+
+        <% if (error) { %>
+            <p class="error-message"><%= error %></p>
+        <% } %>
+
+        <form class="form-box" action="/issues" method="POST">
+            <label for="title">Tittel</label>
+            <input id="title" name="title" type="text" required>
+
+            <label for="category">Kategori</label>
+            <input id="category" name="category" type="text" required>
+
+            <label for="description">Beskrivelse</label>
+            <textarea id="description" name="description" rows="6" required></textarea>
+
+            <button class="button" type="submit">Lagre sak</button>
+        </form>
+    </div>
+</section>
+
+<%- include("partials/footer") %>

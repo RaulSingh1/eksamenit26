@@ -1,0 +1,49 @@
+<%- include("partials/header", { title: "Forside | Eksamen IT 2026" }) %>
+
+<section class="hero">
+    <div class="container hero-content">
+        <div>
+            <p class="small-title">VG2 informasjonsteknologi</p>
+            <h1>En enkel og ryddig eksamensside</h1>
+            <p>
+                Dette er forsiden til prosjektet. Her kan vi senere legge inn innholdet
+                fra eksamensoppgaven på en oversiktlig måte.
+            </p>
+            <% if (user) { %>
+                <a class="button" href="/issues">Se saker</a>
+            <% } else { %>
+                <a class="button" href="/login">Logg inn</a>
+            <% } %>
+        </div>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container grid">
+        <article class="info-box">
+            <h2>Om prosjektet</h2>
+            <p>
+                Prosjektet bruker Node.js, Express, EJS og MongoDB. JavaScript på
+                frontend kan legges til senere når det trengs.
+            </p>
+        </article>
+
+        <article class="info-box">
+            <h2>Plan</h2>
+            <p>
+                Først bygger vi opp en god struktur. Etterpå kan vi legge inn innhold,
+                adminside og funksjoner steg for steg.
+            </p>
+        </article>
+
+        <article class="info-box">
+            <h2>Mål</h2>
+            <p>
+                Siden skal være lett å forstå, se ryddig ut og ha kode som kan forklares
+                på en enkel måte.
+            </p>
+        </article>
+    </div>
+</section>
+
+<%- include("partials/footer") %>

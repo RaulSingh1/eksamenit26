@@ -1,0 +1,34 @@
+<%- include("partials/header", { title: "Saker | Eksamen IT 2026" }) %>
+
+<section class="page-title">
+    <div class="container">
+        <p class="small-title">Saker</p>
+        <h1>Oversikt over saker</h1>
+
+        <% if (user.role === "elev" || user.role === "admin") { %>
+            <a class="button" href="/issues/new">Opprett sak</a>
+        <% } %>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container list">
+        <% if (issues.length === 0) { %>
+            <p>Det finnes ingen saker enda.</p>
+        <% } %>
+
+        <% issues.forEach((issue) => { %>
+            <article class="info-box">
+                <h2><a href="/issues/<%= issue._id %>"><%= issue.title %></a></h2>
+                <p><%= issue.description %></p>
+                <p>
+                    <strong>Kategori:</strong> <%= issue.category %> |
+                    <strong>Status:</strong> <%= issue.status %> |
+                    <strong>Laget av:</strong> <%= issue.createdBy.username %>
+                </p>
+            </article>
+        <% }) %>
+    </div>
+</section>
+
+<%- include("partials/footer") %>

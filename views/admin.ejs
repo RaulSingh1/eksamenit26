@@ -1,0 +1,50 @@
+<%- include("partials/header", { title: "Admin | Eksamen IT 2026" }) %>
+
+<section class="page-title">
+    <div class="container">
+        <p class="small-title">Admin</p>
+        <h1>Administrasjon</h1>
+        <p>Oversikt over brukere, saker og innloggingslogger.</p>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container admin-layout">
+        <div class="admin-panel">
+            <h2>Brukere</h2>
+            <ul class="status-list">
+                <% users.forEach((item) => { %>
+                    <li><span><%= item.username %></span><strong><%= item.role %></strong></li>
+                <% }) %>
+            </ul>
+        </div>
+
+        <div class="admin-panel">
+            <h2>Saker</h2>
+            <ul class="status-list">
+                <% issues.forEach((issue) => { %>
+                    <li>
+                        <span><a href="/issues/<%= issue._id %>"><%= issue.title %></a></span>
+                        <strong><%= issue.status %></strong>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+    </div>
+
+    <div class="container logs-box">
+        <div class="admin-panel">
+            <h2>Autentiseringslogger</h2>
+            <ul class="status-list">
+                <% authLogs.forEach((log) => { %>
+                    <li>
+                        <span><%= log.username %> - <%= log.action %></span>
+                        <strong><%= log.timestamp.toLocaleString("no-NO") %></strong>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<%- include("partials/footer") %>

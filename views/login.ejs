@@ -1,0 +1,23 @@
+<%- include("partials/header", { title: "Logg inn | Eksamen IT 2026" }) %>
+
+<section class="form-section">
+    <div class="container narrow">
+        <h1>Logg inn</h1>
+
+        <% if (error) { %>
+            <p class="error-message"><%= error %></p>
+        <% } %>
+
+        <form class="form-box" action="/login" method="POST">
+            <label for="username">Brukernavn</label>
+            <input id="username" name="username" type="text" required>
+
+            <label for="password">Passord</label>
+            <input id="password" name="password" type="password" required>
+
+            <button class="button" type="submit">Logg inn</button>
+        </form>
+    </div>
+</section>
+
+<%- include("partials/footer") %>
