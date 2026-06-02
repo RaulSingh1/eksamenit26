@@ -76,7 +76,14 @@ app.get("/register", (req, res) => {
 
 app.post("/register", async (req, res) => {
     const { username, password, role } = req.body;
+    const allowedRoles = ["elev", "lærer"];
     const existingUser = await User.findOne({ username });
+
+    if (!allowedRoles.includes(role)) {
+        return res.render("register", {
+            error: "Du kan bare registrere elev eller lærer her."
+        });
+    }
 
     if (existingUser) {
         return res.render("register", {

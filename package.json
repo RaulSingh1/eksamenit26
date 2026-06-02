@@ -4,7 +4,8 @@
   "description": "Eksamensprosjekt IT 2026",
   "main": "app.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "seed-admin": "node scripts/seedAdmin.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
