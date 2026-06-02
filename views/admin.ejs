@@ -5,36 +5,96 @@
         <p class="small-title">Admin</p>
         <h1>Administrasjon</h1>
         <p>Oversikt over brukere, saker og innloggingslogger.</p>
+
+        <% if (message) { %>
+            <p class="success-message"><%= message %></p>
+        <% } %>
     </div>
 </section>
 
 <section class="content-section">
+    <div class="container admin-create">
+        <div class="admin-panel">
+            <h2>Opprett bruker</h2>
+
+            <form class="form-box simple-form" action="/admin/users" method="POST">
+                <label for="username">Brukernavn</label>
+                <input id="username" name="username" type="text" required>
+
+                <label for="password">Passord</label>
+                <input id="password" name="password" type="password" required>
+
+                <label for="role">Rolle</label>
+                <select id="role" name="role" required>
+                    <option value="elev">Elev</option>
+                    <option value="lærer">Lærer</option>
+                    <option value="admin">Admin</option>
+                </select>
+
+                <button class="button" type="submit">Opprett bruker</button>
+            </form>
+        </div>
+    </div>
+
     <div class="container admin-layout">
         <div class="admin-panel">
             <h2>Brukere</h2>
-            <ul class="status-list">
+
+            <div class="admin-list">
                 <% users.forEach((item) => { %>
-                    <li><span><%= item.username %></span><strong><%= item.role %></strong></li>
+                    <div class="admin-row">
+                        <div>
+                            <strong><%= item.username %></strong>
+                            <p><%= item.role %></p>
+                        </div>
+
+                        <form class="row-form" action="/admin/users/<%= item._id %>/role" method="POST">
+                            <select name="role" aria-label="Endre rolle">
+                                <option value="elev" <%= item.role === "elev" ? "selected" : "" %>>Elev</option>
+                                <option value="lærer" <%= item.role === "lærer" ? "selected" : "" %>>Lærer</option>
+                                <option value="admin" <%= item.role === "admin" ? "selected" : "" %>>Admin</option>
+                            </select>
+                            <button class="small-button" type="submit">Lagre</button>
+                        </form>
+
+                        <form action="/admin/users/<%= item._id %>/delete" method="POST">
+                            <button class="danger-button" type="submit">Slett</button>
+                        </form>
+                    </div>
                 <% }) %>
-            </ul>
+            </div>
         </div>
 
         <div class="admin-panel">
             <h2>Saker</h2>
-            <ul class="status-list">
+
+            <div class="admin-list">
                 <% issues.forEach((issue) => { %>
-                    <li>
-                        <span><a href="/issues/<%= issue._id %>"><%= issue.title %></a></span>
-                        <strong><%= issue.status %></strong>
-                    </li>
+                    <div class="admin-row">
+                        <div>
+                            <strong><a href="/issues/<%= issue._id %>"><%= issue.title %></a></strong>
+                            <p><%= issue.status %> - <%= issue.createdBy.username %></p>
+                        </div>
+
+                        <form action="/admin/issues/<%= issue._id %>/delete" method="POST">
+                            <button class="danger-button" type="submit">Slett</button>
+                        </form>
+                    </div>
                 <% }) %>
-            </ul>
+            </div>
         </div>
     </div>
 
     <div class="container logs-box">
         <div class="admin-panel">
-            <h2>Autentiseringslogger</h2>
+            <div class="panel-title">
+                <h2>Autentiseringslogger</h2>
+
+                <form action="/admin/logs/delete" method="POST">
+                    <button class="danger-button" type="submit">Slett logger</button>
+                </form>
+            </div>
+
             <ul class="status-list">
                 <% authLogs.forEach((log) => { %>
                     <li>
