@@ -67,6 +67,30 @@ function requireRole(roles) {
     };
 }
 
+// Samme som requireLogin, men for API. API skal svare med JSON.
+function requireApiLogin(req, res, next) {
+    if (!req.session.user) {
+        return res.status(401).json({
+            message: "Du må være logget inn."
+        });
+    }
+
+    next();
+}
+
+// Samme som requireRole, men for API.
+function requireApiRole(roles) {
+    return (req, res, next) => {
+        if (!req.session.user || !roles.includes(req.session.user.role)) {
+            return res.status(403).json({
+                message: "Du har ikke tilgang."
+            });
+        }
+
+        next();
+    };
+}
+
 // Lagrer login, logout og failed login i databasen.
 async function saveAuthLog(username, action) {
     await AuthLog.create({
@@ -227,8 +251,32 @@ app.get("/issues/:id", requireLogin, async (req, res) => {
     });
 });
 
-// Lærer og admin kan endre status.
-app.post("/issues/:id/status", requireLogin, requireRole(["lærer", "admin"]), async (req, res) => {
+// Lærer/admin kan endre alle saker. Elev kan endre egne saker.
+app.post("/issues/:id/status", requireLogin, async (req, res) => {
+    const issue = await Issue.findById(req.params.id);
+    const allowedStatuses = ["åpen", "under arbeid", "løst"];
+
+    if (!issue) {
+        return res.status(404).render("error", {
+            message: "Saken finnes ikke."
+        });
+    }
+
+    if (!allowedStatuses.includes(req.body.status)) {
+        return res.status(400).render("error", {
+            message: "Ugyldig status."
+        });
+    }
+
+    const ownsIssue = issue.createdBy.toString() === req.session.user.id;
+    const canChangeAll = ["lærer", "admin"].includes(req.session.user.role);
+
+    if (!ownsIssue && !canChangeAll) {
+        return res.status(403).render("error", {
+            message: "Du har ikke tilgang til å endre denne saken."
+        });
+    }
+
     await Issue.findByIdAndUpdate(req.params.id, {
         status: req.body.status
     });
@@ -332,8 +380,8 @@ app.post("/admin/logs/delete", requireLogin, requireRole(["admin"]), async (req,
     res.redirect("/admin?message=Logger slettet");
 });
 
-// API-route som henter saker som JSON.
-app.get("/api/issues", requireLogin, async (req, res) => {
+// API: henter saker som JSON.
+app.get("/api/issues", requireApiLogin, async (req, res) => {
     const filter = req.session.user.role === "elev"
         ? { createdBy: req.session.user.id }
         : {};
@@ -342,19 +390,30 @@ app.get("/api/issues", requireLogin, async (req, res) => {
     res.json(issues);
 });
 
-// API-route som henter en bestemt sak.
-app.get("/api/issues/:id", requireLogin, async (req, res) => {
+// API: henter en bestemt sak.
+app.get("/api/issues/:id", requireApiLogin, async (req, res) => {
     const issue = await Issue.findById(req.params.id).populate("createdBy", "username role");
 
     if (!issue) {
         return res.status(404).json({ message: "Saken finnes ikke." });
     }
 
+    const ownsIssue = issue.createdBy._id.toString() === req.session.user.id;
+    const canSeeAll = ["lærer", "admin"].includes(req.session.user.role);
+
+    if (!ownsIssue && !canSeeAll) {
+        return res.status(403).json({ message: "Du har ikke tilgang til denne saken." });
+    }
+
     res.json(issue);
 });
 
-// API-route som oppretter sak.
-app.post("/api/issues", requireLogin, requireRole(["elev", "admin"]), async (req, res) => {
+// API: oppretter sak.
+app.post("/api/issues", requireApiLogin, requireApiRole(["elev", "admin"]), async (req, res) => {
+    if (!req.body.title || !req.body.description || !req.body.category) {
+        return res.status(400).json({ message: "Alle feltene må fylles ut." });
+    }
+
     const issue = await Issue.create({
         title: req.body.title,
         description: req.body.description,
@@ -365,13 +424,98 @@ app.post("/api/issues", requireLogin, requireRole(["elev", "admin"]), async (req
     res.status(201).json(issue);
 });
 
-// API-route som oppdaterer status.
-app.post("/api/issues/:id/status", requireLogin, requireRole(["lærer", "admin"]), async (req, res) => {
-    const issue = await Issue.findByIdAndUpdate(req.params.id, {
+// API: oppdaterer status. Elev kan endre egne saker.
+app.post("/api/issues/:id/status", requireApiLogin, async (req, res) => {
+    const issue = await Issue.findById(req.params.id);
+
+    if (!issue) {
+        return res.status(404).json({ message: "Saken finnes ikke." });
+    }
+
+    const ownsIssue = issue.createdBy.toString() === req.session.user.id;
+    const canChangeAll = ["lærer", "admin"].includes(req.session.user.role);
+
+    if (!ownsIssue && !canChangeAll) {
+        return res.status(403).json({ message: "Du har ikke tilgang til å endre denne saken." });
+    }
+
+    const updatedIssue = await Issue.findByIdAndUpdate(req.params.id, {
         status: req.body.status
     }, { new: true });
 
+    res.json(updatedIssue);
+});
+
+// API: lærer/admin kan legge inn lærersvar.
+app.post("/api/issues/:id/teacher-response", requireApiLogin, requireApiRole(["lærer", "admin"]), async (req, res) => {
+    const issue = await Issue.findByIdAndUpdate(req.params.id, {
+        teacherResponse: req.body.teacherResponse
+    }, { new: true });
+
+    if (!issue) {
+        return res.status(404).json({ message: "Saken finnes ikke." });
+    }
+
     res.json(issue);
+});
+
+// API: admin kan hente brukere uten passord.
+app.get("/api/users", requireApiLogin, requireApiRole(["admin"]), async (req, res) => {
+    const users = await User.find().select("username role").sort({ username: 1 });
+
+    res.json(users);
+});
+
+// API: admin kan opprette bruker.
+app.post("/api/users", requireApiLogin, requireApiRole(["admin"]), async (req, res) => {
+    const { username, password, role } = req.body;
+    const allowedRoles = ["elev", "lærer", "admin"];
+    const existingUser = await User.findOne({ username });
+
+    if (!username || !password || !allowedRoles.includes(role)) {
+        return res.status(400).json({ message: "Ugyldig brukerdata." });
+    }
+
+    if (existingUser) {
+        return res.status(400).json({ message: "Brukeren finnes allerede." });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+        username,
+        password: hashedPassword,
+        role
+    });
+
+    res.status(201).json({
+        id: user._id,
+        username: user.username,
+        role: user.role
+    });
+});
+
+// API: admin kan hente autentiseringslogger.
+app.get("/api/authlogs", requireApiLogin, requireApiRole(["admin"]), async (req, res) => {
+    const authLogs = await AuthLog.find().sort({ timestamp: -1 }).limit(50);
+
+    res.json(authLogs);
+});
+
+// API: admin kan hente kritiske hendelser.
+app.get("/api/critical-events", requireApiLogin, requireApiRole(["admin"]), async (req, res) => {
+    const failedLogins = await AuthLog.find({
+        action: "failed login"
+    }).sort({ timestamp: -1 }).limit(20);
+
+    const openIssues = await Issue.find({
+        status: "åpen"
+    }).populate("createdBy", "username role").sort({ createdAt: -1 }).limit(20);
+
+    res.json({
+        failedLogins,
+        openIssues
+    });
 });
 
 // Starter serveren.

@@ -21,7 +21,9 @@
             <h2>Lærersvar</h2>
             <p><%= issue.teacherResponse || "Ingen svar enda." %></p>
 
-            <% if (user.role === "lærer" || user.role === "admin") { %>
+            <% const canChangeStatus = user.role === "lærer" || user.role === "admin" || issue.createdBy._id.toString() === user.id; %>
+
+            <% if (canChangeStatus) { %>
                 <form class="small-form" action="/issues/<%= issue._id %>/status" method="POST">
                     <label for="status">Status</label>
                     <select id="status" name="status">
@@ -31,7 +33,9 @@
                     </select>
                     <button class="button" type="submit">Oppdater status</button>
                 </form>
+            <% } %>
 
+            <% if (user.role === "lærer" || user.role === "admin") { %>
                 <form class="small-form" action="/issues/<%= issue._id %>/teacher-response" method="POST">
                     <label for="teacherResponse">Svar fra lærer</label>
                     <textarea id="teacherResponse" name="teacherResponse" rows="5"><%= issue.teacherResponse %></textarea>
