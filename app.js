@@ -1,33 +1,41 @@
+// Henter inn pakkene vi trenger til serveren.
 const express = require("express");
 const session = require("express-session");
 const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
+// Henter MongoDB-modellene.
 const User = require("./models/User");
 const Issue = require("./models/Issue");
 const AuthLog = require("./models/AuthLog");
 
+// Lager Express-appen og leser inn verdier fra .env.
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/eksamenit26";
 const SESSION_SECRET = process.env.SESSION_SECRET || "eksamen-hemmelighet";
 
+// Setter opp EJS, public-mappen og skjema-data.
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
+// Brukes for å huske hvem som er logget inn.
 app.use(session({
     secret: SESSION_SECRET,
     resave: false,
     saveUninitialized: false
 }));
 
+// Gjør innlogget bruker tilgjengelig i alle EJS-sider.
 app.use((req, res, next) => {
     res.locals.user = req.session.user || null;
     next();
 });
 
+// Kobler serveren til MongoDB.
 mongoose
     .connect(MONGODB_URI)
     .then(() => {
@@ -37,6 +45,7 @@ mongoose
         console.log("Kunne ikke koble til MongoDB:", error.message);
 });
 
+// Stopper brukere som ikke er logget inn.
 function requireLogin(req, res, next) {
     if (!req.session.user) {
         return res.redirect("/login");
@@ -45,6 +54,7 @@ function requireLogin(req, res, next) {
     next();
 }
 
+// Sjekker at brukeren har riktig rolle.
 function requireRole(roles) {
     return (req, res, next) => {
         if (!req.session.user || !roles.includes(req.session.user.role)) {
@@ -57,6 +67,7 @@ function requireRole(roles) {
     };
 }
 
+// Lagrer login, logout og failed login i databasen.
 async function saveAuthLog(username, action) {
     await AuthLog.create({
         username,
@@ -64,10 +75,12 @@ async function saveAuthLog(username, action) {
     });
 }
 
+// Forside.
 app.get("/", (req, res) => {
     res.render("index");
 });
 
+// Registrering.
 app.get("/register", (req, res) => {
     res.render("register", {
         error: ""
@@ -102,6 +115,7 @@ app.post("/register", async (req, res) => {
     res.redirect("/login");
 });
 
+// Innlogging.
 app.get("/login", (req, res) => {
     res.render("login", {
         error: ""
@@ -138,6 +152,7 @@ app.post("/login", async (req, res) => {
     res.redirect("/issues");
 });
 
+// Utlogging.
 app.post("/logout", requireLogin, async (req, res) => {
     const username = req.session.user.username;
 
@@ -147,6 +162,7 @@ app.post("/logout", requireLogin, async (req, res) => {
     });
 });
 
+// Viser saker. Elever ser egne saker, lærer/admin ser alle.
 app.get("/issues", requireLogin, async (req, res) => {
     const filter = req.session.user.role === "elev"
         ? { createdBy: req.session.user.id }
@@ -161,6 +177,7 @@ app.get("/issues", requireLogin, async (req, res) => {
     });
 });
 
+// Opprette ny sak.
 app.get("/issues/new", requireLogin, requireRole(["elev", "admin"]), (req, res) => {
     res.render("new_issue", {
         error: ""
@@ -186,6 +203,7 @@ app.post("/issues", requireLogin, requireRole(["elev", "admin"]), async (req, re
     res.redirect("/issues");
 });
 
+// Viser en bestemt sak.
 app.get("/issues/:id", requireLogin, async (req, res) => {
     const issue = await Issue.findById(req.params.id).populate("createdBy", "username role");
 
@@ -209,6 +227,7 @@ app.get("/issues/:id", requireLogin, async (req, res) => {
     });
 });
 
+// Lærer og admin kan endre status.
 app.post("/issues/:id/status", requireLogin, requireRole(["lærer", "admin"]), async (req, res) => {
     await Issue.findByIdAndUpdate(req.params.id, {
         status: req.body.status
@@ -217,6 +236,7 @@ app.post("/issues/:id/status", requireLogin, requireRole(["lærer", "admin"]), a
     res.redirect(`/issues/${req.params.id}`);
 });
 
+// Lærer og admin kan skrive svar på saken.
 app.post("/issues/:id/teacher-response", requireLogin, requireRole(["lærer", "admin"]), async (req, res) => {
     await Issue.findByIdAndUpdate(req.params.id, {
         teacherResponse: req.body.teacherResponse
@@ -225,6 +245,7 @@ app.post("/issues/:id/teacher-response", requireLogin, requireRole(["lærer", "a
     res.redirect(`/issues/${req.params.id}`);
 });
 
+// Adminside med brukere, saker og logger.
 app.get("/admin", requireLogin, requireRole(["admin"]), async (req, res) => {
     const users = await User.find().sort({ username: 1 });
     const issues = await Issue.find().populate("createdBy", "username role").sort({ createdAt: -1 });
@@ -238,6 +259,7 @@ app.get("/admin", requireLogin, requireRole(["admin"]), async (req, res) => {
     });
 });
 
+// Admin kan opprette brukere.
 app.post("/admin/users", requireLogin, requireRole(["admin"]), async (req, res) => {
     const { username, password, role } = req.body;
     const allowedRoles = ["elev", "lærer", "admin"];
@@ -262,6 +284,7 @@ app.post("/admin/users", requireLogin, requireRole(["admin"]), async (req, res) 
     res.redirect("/admin?message=Bruker opprettet");
 });
 
+// Admin kan endre rolle på brukere.
 app.post("/admin/users/:id/role", requireLogin, requireRole(["admin"]), async (req, res) => {
     const allowedRoles = ["elev", "lærer", "admin"];
 
@@ -280,6 +303,7 @@ app.post("/admin/users/:id/role", requireLogin, requireRole(["admin"]), async (r
     res.redirect("/admin?message=Rolle oppdatert");
 });
 
+// Admin kan slette brukere og sakene deres.
 app.post("/admin/users/:id/delete", requireLogin, requireRole(["admin"]), async (req, res) => {
     if (req.params.id === req.session.user.id) {
         return res.redirect("/admin?message=Du kan ikke slette din egen bruker");
@@ -294,18 +318,21 @@ app.post("/admin/users/:id/delete", requireLogin, requireRole(["admin"]), async 
     res.redirect("/admin?message=Bruker slettet");
 });
 
+// Admin kan slette en sak.
 app.post("/admin/issues/:id/delete", requireLogin, requireRole(["admin"]), async (req, res) => {
     await Issue.findByIdAndDelete(req.params.id);
 
     res.redirect("/admin?message=Sak slettet");
 });
 
+// Admin kan slette autentiseringslogger.
 app.post("/admin/logs/delete", requireLogin, requireRole(["admin"]), async (req, res) => {
     await AuthLog.deleteMany({});
 
     res.redirect("/admin?message=Logger slettet");
 });
 
+// API-route som henter saker som JSON.
 app.get("/api/issues", requireLogin, async (req, res) => {
     const filter = req.session.user.role === "elev"
         ? { createdBy: req.session.user.id }
@@ -315,6 +342,7 @@ app.get("/api/issues", requireLogin, async (req, res) => {
     res.json(issues);
 });
 
+// API-route som henter en bestemt sak.
 app.get("/api/issues/:id", requireLogin, async (req, res) => {
     const issue = await Issue.findById(req.params.id).populate("createdBy", "username role");
 
@@ -325,6 +353,7 @@ app.get("/api/issues/:id", requireLogin, async (req, res) => {
     res.json(issue);
 });
 
+// API-route som oppretter sak.
 app.post("/api/issues", requireLogin, requireRole(["elev", "admin"]), async (req, res) => {
     const issue = await Issue.create({
         title: req.body.title,
@@ -336,6 +365,7 @@ app.post("/api/issues", requireLogin, requireRole(["elev", "admin"]), async (req
     res.status(201).json(issue);
 });
 
+// API-route som oppdaterer status.
 app.post("/api/issues/:id/status", requireLogin, requireRole(["lærer", "admin"]), async (req, res) => {
     const issue = await Issue.findByIdAndUpdate(req.params.id, {
         status: req.body.status
@@ -344,6 +374,7 @@ app.post("/api/issues/:id/status", requireLogin, requireRole(["lærer", "admin"]
     res.json(issue);
 });
 
+// Starter serveren.
 app.listen(PORT, () => {
     console.log(`Server kjører på http://localhost:${PORT}`);
 });

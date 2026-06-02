@@ -26,6 +26,7 @@
                     <strong>Status:</strong> <%= issue.status %> |
                     <strong>Laget av:</strong> <%= issue.createdBy.username %>
                 </p>
+                <a class="small-link-button" href="/issues/<%= issue._id %>">Åpne / svar</a>
             </article>
         <% }) %>
     </div>

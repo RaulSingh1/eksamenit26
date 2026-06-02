@@ -57,7 +57,7 @@
                             <button class="small-button" type="submit">Lagre</button>
                         </form>
 
-                        <form action="/admin/users/<%= item._id %>/delete" method="POST">
+                        <form class="confirm-form" action="/admin/users/<%= item._id %>/delete" method="POST">
                             <button class="danger-button" type="submit">Slett</button>
                         </form>
                     </div>
@@ -76,7 +76,9 @@
                             <p><%= issue.status %> - <%= issue.createdBy.username %></p>
                         </div>
 
-                        <form action="/admin/issues/<%= issue._id %>/delete" method="POST">
+                        <a class="small-link-button" href="/issues/<%= issue._id %>">Svar</a>
+
+                        <form class="confirm-form" action="/admin/issues/<%= issue._id %>/delete" method="POST">
                             <button class="danger-button" type="submit">Slett</button>
                         </form>
                     </div>
@@ -90,7 +92,7 @@
             <div class="panel-title">
                 <h2>Autentiseringslogger</h2>
 
-                <form action="/admin/logs/delete" method="POST">
+                <form class="confirm-form" action="/admin/logs/delete" method="POST">
                     <button class="danger-button" type="submit">Slett logger</button>
                 </form>
             </div>
