@@ -1,0 +1,65 @@
+<%- include("partials/header", { title: "Hjelp | Eksamen IT 2026" }) %>
+
+<section class="page-title">
+    <div class="container">
+        <p class="small-title">Support</p>
+        <h1>Hjelp og brukerveiledning</h1>
+        <p>Her finner du kort informasjon om hvordan systemet brukes og hva du kan gjøre hvis noe ikke fungerer.</p>
+    </div>
+</section>
+
+<section class="content-section">
+    <div class="container support-grid">
+        <article class="admin-panel">
+            <h2>Hvis noe ikke fungerer</h2>
+            <ul class="simple-list">
+                <li>Sjekk at du er logget inn med riktig bruker.</li>
+                <li>Prøv å laste siden på nytt.</li>
+                <li>Sjekk at saken du prøver å åpne finnes.</li>
+                <li>Kontakt administrator hvis du mangler tilgang.</li>
+            </ul>
+        </article>
+
+        <article class="admin-panel">
+            <h2>Supportinformasjon</h2>
+            <p><strong>System:</strong> Eksamen IT 2026</p>
+            <p><strong>Nettside:</strong> http://10.12.13.217:3000</p>
+            <p><strong>Node.js-server:</strong> 10.12.13.217</p>
+            <p><strong>MongoDB-server:</strong> 10.12.13.216</p>
+        </article>
+    </div>
+
+    <div class="container support-grid">
+        <article class="admin-panel">
+            <h2>Elev</h2>
+            <ul class="simple-list">
+                <li>Logg inn eller registrer en bruker.</li>
+                <li>Gå til Saker.</li>
+                <li>Opprett en ny sak hvis du trenger hjelp.</li>
+                <li>Åpne saken for å se lærersvar eller endre status.</li>
+            </ul>
+        </article>
+
+        <article class="admin-panel">
+            <h2>Lærer</h2>
+            <ul class="simple-list">
+                <li>Logg inn med lærerbruker.</li>
+                <li>Gå til Saker for å se innsendte saker.</li>
+                <li>Åpne en sak for å skrive svar.</li>
+                <li>Endre status når saken behandles eller løses.</li>
+            </ul>
+        </article>
+
+        <article class="admin-panel">
+            <h2>Admin</h2>
+            <ul class="simple-list">
+                <li>Gå til Admin-siden.</li>
+                <li>Opprett brukere eller endre roller.</li>
+                <li>Slett brukere, saker eller logger ved behov.</li>
+                <li>Se innloggingslogger og kritiske hendelser.</li>
+            </ul>
+        </article>
+    </div>
+</section>
+
+<%- include("partials/footer") %>

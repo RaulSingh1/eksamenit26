@@ -380,6 +380,11 @@ app.post("/admin/logs/delete", requireLogin, requireRole(["admin"]), async (req,
     res.redirect("/admin?message=Logger slettet");
 });
 
+// Hjelpeside for innloggede brukere.
+app.get("/support", requireLogin, (req, res) => {
+    res.render("support");
+});
+
 // API: henter saker som JSON.
 app.get("/api/issues", requireApiLogin, async (req, res) => {
     const filter = req.session.user.role === "elev"
