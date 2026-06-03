@@ -16,14 +16,30 @@
                 <li>Sjekk at du er logget inn med riktig bruker.</li>
                 <li>Prøv å laste siden på nytt.</li>
                 <li>Sjekk at saken du prøver å åpne finnes.</li>
-                <li>Kontakt administrator hvis du mangler tilgang.</li>
+                <% if (user.role === "elev") { %>
+                    <li>Kontakt lærer hvis du mangler tilgang.</li>
+                <% } %>
+                <% if (user.role === "lærer") { %>
+                    <li>Kontakt admin hvis du mangler tilgang.</li>
+                <% } %>
+                <% if (user.role === "admin") { %>
+                    <li>Sjekk brukere, roller og logger hvis noe ikke fungerer.</li>
+                <% } %>
             </ul>
         </article>
 
         <article class="admin-panel">
             <h2>Supportinformasjon</h2>
             <p><strong>System:</strong> Eksamen IT 2026</p>
-            <p>Kontakt administrator hvis du ikke får logget inn, mangler tilgang eller ikke finner saken din.</p>
+            <% if (user.role === "elev") { %>
+                <p>Kontakt lærer hvis du ikke får logget inn, mangler tilgang eller ikke finner saken din.</p>
+            <% } %>
+            <% if (user.role === "lærer") { %>
+                <p>Kontakt admin hvis du ikke får logget inn eller mangler tilgang.</p>
+            <% } %>
+            <% if (user.role === "admin") { %>
+                <p>Bruk admin-siden for å sjekke brukere, saker og logger.</p>
+            <% } %>
             <p>Oppgi brukernavn og hva som feiler når du ber om hjelp.</p>
         </article>
     </div>
