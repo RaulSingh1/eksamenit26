@@ -3,11 +3,11 @@
 <section class="hero">
     <div class="container hero-content">
         <div>
-            <p class="small-title">VG2 informasjonsteknologi</p>
-            <h1>En enkel og ryddig eksamensside</h1>
+            <p class="small-title">Supportsystem for skolen</p>
+            <h1>Registrering og behandling av saker</h1>
             <p>
-                Dette er forsiden til prosjektet. Her kan vi senere legge inn innholdet
-                fra eksamensoppgaven på en oversiktlig måte.
+                Dette systemet lar elever registrere utfordringer de møter i undervisningen.
+                Lærere kan lese saker, skrive svar og endre status.
             </p>
             <% if (user) { %>
                 <a class="button" href="/issues">Se saker</a>
@@ -23,24 +23,24 @@
         <article class="info-box">
             <h2>Om prosjektet</h2>
             <p>
-                Prosjektet bruker Node.js, Express, EJS og MongoDB. JavaScript på
-                frontend kan legges til senere når det trengs.
+                Prosjektet er laget med Node.js, Express, EJS og MongoDB.
+                Brukere, saker og innloggingslogger lagres i databasen.
             </p>
         </article>
 
         <article class="info-box">
-            <h2>Plan</h2>
+            <h2>Roller</h2>
             <p>
-                Først bygger vi opp en god struktur. Etterpå kan vi legge inn innhold,
-                adminside og funksjoner steg for steg.
+                Systemet har tre roller: elev, lærer og admin. Hver rolle har ulike
+                tilganger etter hva de skal gjøre i løsningen.
             </p>
         </article>
 
         <article class="info-box">
-            <h2>Mål</h2>
+            <h2>Formål</h2>
             <p>
-                Siden skal være lett å forstå, se ryddig ut og ha kode som kan forklares
-                på en enkel måte.
+                Målet er å gi skolen bedre oversikt over utfordringer, svar fra lærer
+                og status på saker som er åpne, under arbeid eller løst.
             </p>
         </article>
     </div>
