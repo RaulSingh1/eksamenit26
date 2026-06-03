@@ -301,6 +301,10 @@ textarea {
     margin-bottom: 0;
 }
 
+.role-help-grid {
+    grid-template-columns: 1fr;
+}
+
 .simple-list {
     margin: 0;
     padding-left: 20px;

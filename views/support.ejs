@@ -28,36 +28,42 @@
         </article>
     </div>
 
-    <div class="container support-grid">
-        <article class="admin-panel">
-            <h2>Elev</h2>
-            <ul class="simple-list">
-                <li>Logg inn eller registrer en bruker.</li>
-                <li>Gå til Saker.</li>
-                <li>Opprett en ny sak hvis du trenger hjelp.</li>
-                <li>Åpne saken for å se lærersvar eller endre status.</li>
-            </ul>
-        </article>
+    <div class="container support-grid role-help-grid">
+        <% if (user.role === "elev") { %>
+            <article class="admin-panel">
+                <h2>Elev</h2>
+                <ul class="simple-list">
+                    <li>Logg inn eller registrer en bruker.</li>
+                    <li>Gå til Saker.</li>
+                    <li>Opprett en ny sak hvis du trenger hjelp.</li>
+                    <li>Åpne saken for å se lærersvar eller endre status.</li>
+                </ul>
+            </article>
+        <% } %>
 
-        <article class="admin-panel">
-            <h2>Lærer</h2>
-            <ul class="simple-list">
-                <li>Logg inn med lærerbruker.</li>
-                <li>Gå til Saker for å se innsendte saker.</li>
-                <li>Åpne en sak for å skrive svar.</li>
-                <li>Endre status når saken behandles eller løses.</li>
-            </ul>
-        </article>
+        <% if (user.role === "lærer") { %>
+            <article class="admin-panel">
+                <h2>Lærer</h2>
+                <ul class="simple-list">
+                    <li>Logg inn med lærerbruker.</li>
+                    <li>Gå til Saker for å se innsendte saker.</li>
+                    <li>Åpne en sak for å skrive svar.</li>
+                    <li>Endre status når saken behandles eller løses.</li>
+                </ul>
+            </article>
+        <% } %>
 
-        <article class="admin-panel">
-            <h2>Admin</h2>
-            <ul class="simple-list">
-                <li>Kan se oversikt over brukere.</li>
-                <li>Kan se alle saker i systemet.</li>
-                <li>Kan se innloggingslogger.</li>
-                <li>Kan se failed login og andre viktige hendelser.</li>
-            </ul>
-        </article>
+        <% if (user.role === "admin") { %>
+            <article class="admin-panel">
+                <h2>Admin</h2>
+                <ul class="simple-list">
+                    <li>Kan se oversikt over brukere.</li>
+                    <li>Kan se alle saker i systemet.</li>
+                    <li>Kan se innloggingslogger.</li>
+                    <li>Kan se failed login og andre viktige hendelser.</li>
+                </ul>
+            </article>
+        <% } %>
     </div>
 </section>
 
