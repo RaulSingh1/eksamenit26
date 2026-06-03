@@ -184,6 +184,11 @@ textarea {
     font: inherit;
 }
 
+input::placeholder,
+textarea::placeholder {
+    color: #9aa5b1;
+}
+
 textarea {
     resize: vertical;
 }
