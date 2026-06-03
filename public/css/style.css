@@ -305,7 +305,6 @@ textarea {
 }
 
 .support-grid:last-child {
-    grid-template-columns: repeat(3, 1fr);
     margin-bottom: 0;
 }
 
@@ -320,6 +319,19 @@ textarea {
 
 .simple-list li {
     margin-bottom: 8px;
+}
+
+pre {
+    overflow-x: auto;
+    padding: 12px;
+    border-radius: 4px;
+    background-color: #f3f4f6;
+    border: 1px solid #dddddd;
+}
+
+code {
+    font-family: Menlo, Consolas, monospace;
+    font-size: 0.9rem;
 }
 
 .status-list {

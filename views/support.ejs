@@ -1,10 +1,10 @@
-<%- include("partials/header", { title: "Hjelp | Eksamen IT 2026" }) %>
+<%- include("partials/header", { title: "FAQ | Eksamen IT 2026" }) %>
 
 <section class="page-title">
     <div class="container">
-        <p class="small-title">Support</p>
-        <h1>Hjelp og brukerveiledning</h1>
-        <p>Her finner du kort informasjon om hvordan systemet brukes og hva du kan gjøre hvis noe ikke fungerer.</p>
+        <p class="small-title">FAQ</p>
+        <h1>Brukerveiledning og hjelp</h1>
+        <p>Her finner du en enkel forklaring på hvordan nettsiden brukes, hvordan brukere får opplæring og hva man gjør hvis noe feiler.</p>
     </div>
 </section>
 
@@ -47,19 +47,21 @@
     <div class="container support-grid role-help-grid">
         <% if (user.role === "elev") { %>
             <article class="admin-panel">
-                <h2>Elev</h2>
+                <h2>Brukerveiledning for elev</h2>
                 <ul class="simple-list">
                     <li>Logg inn eller registrer en bruker.</li>
                     <li>Gå til Saker.</li>
                     <li>Opprett en ny sak hvis du trenger hjelp.</li>
+                    <li>Fyll inn tittel, kategori og beskrivelse.</li>
                     <li>Åpne saken for å se lærersvar eller endre status.</li>
+                    <li>Elev kan maks opprette 5 saker.</li>
                 </ul>
             </article>
         <% } %>
 
         <% if (user.role === "lærer") { %>
             <article class="admin-panel">
-                <h2>Lærer</h2>
+                <h2>Brukerveiledning for lærer</h2>
                 <ul class="simple-list">
                     <li>Logg inn med lærerbruker.</li>
                     <li>Gå til Saker for å se innsendte saker.</li>
@@ -71,15 +73,63 @@
 
         <% if (user.role === "admin") { %>
             <article class="admin-panel">
-                <h2>Admin</h2>
+                <h2>Brukerveiledning for admin</h2>
                 <ul class="simple-list">
-                    <li>Kan se oversikt over brukere.</li>
-                    <li>Kan se alle saker i systemet.</li>
-                    <li>Kan se innloggingslogger.</li>
-                    <li>Kan se failed login og andre viktige hendelser.</li>
+                    <li>Gå til Admin etter innlogging.</li>
+                    <li>Opprett brukere ved behov.</li>
+                    <li>Endre roller på brukere.</li>
+                    <li>Slett brukere, saker eller logger hvis det er nødvendig.</li>
+                    <li>Se innloggingslogger og failed login.</li>
                 </ul>
             </article>
         <% } %>
+    </div>
+
+    <div class="container support-grid">
+        <article class="admin-panel">
+            <h2>Opplæringsplan</h2>
+            <ul class="simple-list">
+                <li>Vis hvordan brukeren logger inn.</li>
+                <li>Vis hvordan en elev oppretter en sak.</li>
+                <li>Vis hvordan en lærer svarer og endrer status.</li>
+                <li>Vis hvordan admin administrerer brukere og roller.</li>
+                <li>Vis hvor auth logs og failed login finnes.</li>
+            </ul>
+        </article>
+
+        <article class="admin-panel">
+            <h2>Rutiner for feilhåndtering</h2>
+            <ul class="simple-list">
+                <li>Hvis nettsiden ikke åpner, sjekk at Node.js-serveren kjører.</li>
+                <li>Hvis data ikke vises, sjekk at MongoDB kjører.</li>
+                <li>Hvis brukeren mangler tilgang, sjekk rollen til brukeren.</li>
+                <li>Hvis innlogging feiler, sjekk brukernavn og passord.</li>
+                <li>Hvis mange innlogginger feiler, sjekk auth logs.</li>
+            </ul>
+        </article>
+    </div>
+
+    <div class="container support-grid">
+        <article class="admin-panel">
+            <h2>Serverkommandoer ved feil</h2>
+            <p><strong>Node.js-server:</strong></p>
+            <pre><code>cd ~/eksamenit26
+npm start</code></pre>
+
+            <p><strong>Hvis port 3000 er opptatt:</strong></p>
+            <pre><code>sudo lsof -i :3000
+kill PID
+npm start</code></pre>
+        </article>
+
+        <article class="admin-panel">
+            <h2>Database ved feil</h2>
+            <p><strong>Sjekk MongoDB:</strong></p>
+            <pre><code>sudo systemctl status mongod</code></pre>
+
+            <p><strong>Start MongoDB:</strong></p>
+            <pre><code>sudo systemctl start mongod</code></pre>
+        </article>
     </div>
 </section>
 

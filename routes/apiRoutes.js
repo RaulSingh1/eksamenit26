@@ -7,6 +7,7 @@ const AuthLog = require("../models/AuthLog");
 const { requireApiLogin, requireApiRole } = require("../middleware/auth");
 
 const router = express.Router();
+const MAX_ISSUES_PER_STUDENT = 5;
 
 router.get("/issues", requireApiLogin, async (req, res) => {
     const filter = req.session.user.role === "elev"
@@ -37,6 +38,16 @@ router.get("/issues/:id", requireApiLogin, async (req, res) => {
 router.post("/issues", requireApiLogin, requireApiRole(["elev", "admin"]), async (req, res) => {
     if (!req.body.title || !req.body.description || !req.body.category) {
         return res.status(400).json({ message: "Alle feltene må fylles ut." });
+    }
+
+    if (req.session.user.role === "elev") {
+        const issueCount = await Issue.countDocuments({
+            createdBy: req.session.user.id
+        });
+
+        if (issueCount >= MAX_ISSUES_PER_STUDENT) {
+            return res.status(403).json({ message: "Du kan maks opprette 5 saker." });
+        }
     }
 
     const issue = await Issue.create({

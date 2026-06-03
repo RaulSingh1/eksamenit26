@@ -4,6 +4,7 @@ const Issue = require("../models/Issue");
 const { requireLogin, requireRole } = require("../middleware/auth");
 
 const router = express.Router();
+const MAX_ISSUES_PER_STUDENT = 5;
 
 router.get("/issues", requireLogin, async (req, res) => {
     const filter = req.session.user.role === "elev"
@@ -19,7 +20,19 @@ router.get("/issues", requireLogin, async (req, res) => {
     });
 });
 
-router.get("/issues/new", requireLogin, requireRole(["elev", "admin"]), (req, res) => {
+router.get("/issues/new", requireLogin, requireRole(["elev", "admin"]), async (req, res) => {
+    if (req.session.user.role === "elev") {
+        const issueCount = await Issue.countDocuments({
+            createdBy: req.session.user.id
+        });
+
+        if (issueCount >= MAX_ISSUES_PER_STUDENT) {
+            return res.status(403).render("error", {
+                message: "Du kan maks opprette 5 saker."
+            });
+        }
+    }
+
     res.render("new_issue", {
         error: ""
     });
@@ -27,6 +40,18 @@ router.get("/issues/new", requireLogin, requireRole(["elev", "admin"]), (req, re
 
 router.post("/issues", requireLogin, requireRole(["elev", "admin"]), async (req, res) => {
     const { title, description, category } = req.body;
+
+    if (req.session.user.role === "elev") {
+        const issueCount = await Issue.countDocuments({
+            createdBy: req.session.user.id
+        });
+
+        if (issueCount >= MAX_ISSUES_PER_STUDENT) {
+            return res.render("new_issue", {
+                error: "Du kan maks opprette 5 saker."
+            });
+        }
+    }
 
     if (!title || !description || !category) {
         return res.render("new_issue", {
