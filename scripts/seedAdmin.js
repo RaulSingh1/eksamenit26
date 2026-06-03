@@ -4,7 +4,7 @@ require("dotenv").config();
 
 const User = require("../models/User");
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/eksamenit26";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://10.12.13.216:27017/eksamenit26";
 const ADMIN_USERNAME = process.env.ADMIN_USERNAME || "admin";
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin123";
 
