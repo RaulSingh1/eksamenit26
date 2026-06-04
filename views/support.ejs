@@ -89,6 +89,132 @@
             </ul>
         </article>
     </div>
+
+    <div class="container visual-guide">
+        <div class="guide-intro">
+            <p class="small-title">Bildeguide</p>
+            <h2>Slik bruker du nettsiden</h2>
+            <p>Tallene på bildene viser hva brukeren skal gjøre i riktig rekkefølge.</p>
+        </div>
+
+        <article class="guide-card">
+            <h3>Logg inn</h3>
+            <div class="guide-layout">
+                <div class="guide-image-box">
+                    <img src="/images/faq/login.png" alt="Skjermbilde av innlogging">
+                    <span class="guide-pill" style="left: 70%; top: 16%;">1</span>
+                    <span class="guide-pill" style="left: 35%; top: 40%;">2</span>
+                    <span class="guide-pill" style="left: 35%; top: 52%;">3</span>
+                    <span class="guide-pill" style="left: 49%; top: 63%;">4</span>
+                </div>
+                <ol class="guide-steps">
+                    <li>Trykk på Logg inn i menyen.</li>
+                    <li>Skriv inn brukernavnet ditt.</li>
+                    <li>Skriv inn passordet ditt.</li>
+                    <li>Trykk på Logg inn-knappen.</li>
+                </ol>
+            </div>
+        </article>
+
+        <article class="guide-card">
+            <h3>Registrer bruker</h3>
+            <div class="guide-layout">
+                <div class="guide-image-box">
+                    <img src="/images/faq/register.png" alt="Skjermbilde av registrering">
+                    <span class="guide-pill" style="left: 82%; top: 16%;">1</span>
+                    <span class="guide-pill" style="left: 36%; top: 40%;">2</span>
+                    <span class="guide-pill" style="left: 36%; top: 52%;">3</span>
+                    <span class="guide-pill" style="left: 36%; top: 63%;">4</span>
+                    <span class="guide-pill" style="left: 49%; top: 74%;">5</span>
+                </div>
+                <ol class="guide-steps">
+                    <li>Trykk på Registrer i menyen.</li>
+                    <li>Velg et brukernavn.</li>
+                    <li>Velg et passord.</li>
+                    <li>Velg rollen Elev eller Lærer.</li>
+                    <li>Trykk på Registrer.</li>
+                </ol>
+            </div>
+        </article>
+
+        <article class="guide-card">
+            <h3>Forside</h3>
+            <div class="guide-layout">
+                <div class="guide-image-box">
+                    <img src="/images/faq/forside.png" alt="Skjermbilde av forsiden">
+                    <span class="guide-pill" style="left: 71%; top: 16%;">1</span>
+                    <span class="guide-pill" style="left: 31%; top: 39%;">2</span>
+                    <span class="guide-pill" style="left: 28%; top: 52%;">3</span>
+                </div>
+                <ol class="guide-steps">
+                    <li>Bruk menyen til å gå mellom Forside, Saker og FAQ.</li>
+                    <li>Les kort hva systemet brukes til.</li>
+                    <li>Trykk Se saker for å gå videre.</li>
+                </ol>
+            </div>
+        </article>
+
+        <article class="guide-card">
+            <h3>Saker</h3>
+            <div class="guide-layout">
+                <div class="guide-image-box">
+                    <img src="/images/faq/saker.png" alt="Skjermbilde av saker">
+                    <span class="guide-pill" style="left: 72%; top: 16%;">1</span>
+                    <span class="guide-pill" style="left: 18%; top: 47%;">2</span>
+                    <span class="guide-pill" style="left: 18%; top: 67%;">3</span>
+                </div>
+                <ol class="guide-steps">
+                    <li>Trykk på Saker i menyen.</li>
+                    <li>Se tittel, kategori, status og hvem som laget saken.</li>
+                    <li>Trykk Åpne / svar for å åpne saken.</li>
+                </ol>
+            </div>
+        </article>
+
+        <article class="guide-card">
+            <h3>Sakdetaljer</h3>
+            <div class="guide-layout">
+                <div class="guide-image-box">
+                    <img src="/images/faq/sak-detalj.png" alt="Skjermbilde av sakdetaljer">
+                    <span class="guide-pill" style="left: 20%; top: 39%;">1</span>
+                    <span class="guide-pill" style="left: 53%; top: 39%;">2</span>
+                    <span class="guide-pill" style="left: 55%; top: 56%;">3</span>
+                    <span class="guide-pill" style="left: 55%; top: 76%;">4</span>
+                </div>
+                <ol class="guide-steps">
+                    <li>Les beskrivelsen av saken.</li>
+                    <li>Se svaret eller forslaget fra lærer.</li>
+                    <% if (user.role === "elev") { %>
+                        <li>Endre status hvis saken for eksempel er løst.</li>
+                        <li>Skriv svar på forslaget fra lærer.</li>
+                    <% } %>
+                    <% if (user.role === "lærer") { %>
+                        <li>Endre status når saken behandles.</li>
+                        <li>Skriv eller oppdater svar til eleven.</li>
+                    <% } %>
+                </ol>
+            </div>
+        </article>
+
+        <article class="guide-card">
+            <h3>FAQ</h3>
+            <div class="guide-layout">
+                <div class="guide-image-box">
+                    <img src="/images/faq/faq.png" alt="Skjermbilde av FAQ-siden">
+                    <span class="guide-pill" style="left: 78%; top: 16%;">1</span>
+                    <span class="guide-pill" style="left: 20%; top: 49%;">2</span>
+                    <span class="guide-pill" style="left: 53%; top: 49%;">3</span>
+                    <span class="guide-pill" style="left: 20%; top: 78%;">4</span>
+                </div>
+                <ol class="guide-steps">
+                    <li>Trykk på FAQ i menyen.</li>
+                    <li>Les hva du kan sjekke hvis noe ikke fungerer.</li>
+                    <li>Se hvem du skal kontakte ved problemer.</li>
+                    <li>Følg brukerveiledningen for rollen din.</li>
+                </ol>
+            </div>
+        </article>
+    </div>
 </section>
 
 <%- include("partials/footer") %>

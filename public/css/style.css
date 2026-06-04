@@ -356,6 +356,72 @@ code {
     color: #1f5fbf;
 }
 
+.visual-guide {
+    margin-top: 28px;
+}
+
+.guide-intro {
+    margin-bottom: 18px;
+}
+
+.guide-card {
+    margin-bottom: 24px;
+    padding: 16px;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
+.guide-card h3 {
+    margin-top: 0;
+    margin-bottom: 14px;
+    font-size: 1.2rem;
+}
+
+.guide-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 18px;
+    align-items: start;
+}
+
+.guide-image-box {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    background-color: #f7f7f7;
+}
+
+.guide-image-box img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.guide-pill {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #1f5fbf;
+    color: #ffffff;
+    font-weight: bold;
+    text-align: center;
+    line-height: 30px;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.guide-steps {
+    margin: 0;
+    padding-left: 24px;
+}
+
+.guide-steps li {
+    margin-bottom: 10px;
+}
+
 .footer {
     padding: 20px 0;
     background-color: #333333;
@@ -379,6 +445,7 @@ code {
 
     .grid,
     .admin-layout,
+    .guide-layout,
     .support-grid,
     .support-grid:last-child {
         grid-template-columns: 1fr;
