@@ -51,6 +51,13 @@ const issueSchema = new mongoose.Schema({
         // default: "" betyr at feltet starter som en tom tekst.
         default: ""
     },
+    // studentResponse lagrer elevens svar på løsningen fra lærer.
+    studentResponse: {
+        // type: String betyr at elevsvaret lagres som tekst.
+        type: String,
+        // default: "" betyr at feltet starter som en tom tekst.
+        default: ""
+    },
     // createdAt lagrer når saken ble opprettet.
     createdAt: {
         // type: Date betyr at feltet lagrer dato og tid.

@@ -43,6 +43,25 @@
                 </form>
             <% } %>
         </article>
+
+        <article class="admin-panel">
+            <h2>Elevens svar</h2>
+            <p><%= issue.studentResponse || "Ingen svar fra elev enda." %></p>
+
+            <% const ownsIssue = issue.createdBy._id.toString() === user.id; %>
+
+            <% if (user.role === "elev" && ownsIssue && issue.teacherResponse) { %>
+                <form class="small-form" action="/issues/<%= issue._id %>/student-response" method="POST">
+                    <label for="studentResponse">Svar på foreslått løsning</label>
+                    <textarea id="studentResponse" name="studentResponse" rows="5"><%= issue.studentResponse %></textarea>
+                    <button class="button" type="submit">Lagre svar</button>
+                </form>
+            <% } %>
+
+            <% if (user.role === "elev" && ownsIssue && !issue.teacherResponse) { %>
+                <p>Du kan svare når lærer har skrevet en foreslått løsning.</p>
+            <% } %>
+        </article>
     </div>
 </section>
 

@@ -69,6 +69,7 @@ Som elev testet jeg:
 - se egne saker
 - åpne sak
 - endre status på egen sak
+- svare på løsningen læreren foreslo
 
 Som lærer testet jeg:
 
@@ -77,6 +78,7 @@ Som lærer testet jeg:
 - åpne en sak
 - skrive lærersvar
 - endre status
+- se elevens svar på foreslått løsning
 
 Som admin testet jeg:
 
@@ -89,3 +91,11 @@ Som admin testet jeg:
 - se auth logs
 
 Dette viser at rollebasert tilgang fungerer i praksis.
+
+## Hvordan elev kan svare på foreslått løsning
+
+Lærer skriver først et svar eller en foreslått løsning på saken. Etter det får eleven som opprettet saken et eget felt der eleven kan skrive svar tilbake.
+
+Elevens svar lagres i feltet `studentResponse` i Issue-modellen. Eleven kan bare svare på egne saker, fordi serveren sjekker `createdBy` mot brukeren som er logget inn.
+
+Dette gjør at saken ikke bare blir enveis kommunikasjon fra lærer til elev. Eleven kan også gi tilbakemelding på om løsningen fungerer eller om problemet fortsatt finnes.

@@ -166,5 +166,40 @@ router.post("/issues/:id/teacher-response", requireLogin, requireRole(["lærer",
     res.redirect(`/issues/${req.params.id}`);
 });
 
+// Elev kan svare på løsningen læreren har foreslått.
+router.post("/issues/:id/student-response", requireLogin, requireRole(["elev"]), async (req, res) => {
+    // Finner saken som eleven prøver å svare på.
+    const issue = await Issue.findById(req.params.id);
+
+    if (!issue) {
+        return res.status(404).render("error", {
+            message: "Saken finnes ikke."
+        });
+    }
+
+    // Sjekker at saken tilhører eleven som er logget inn.
+    const ownsIssue = issue.createdBy.toString() === req.session.user.id;
+
+    if (!ownsIssue) {
+        return res.status(403).render("error", {
+            message: "Du kan bare svare på dine egne saker."
+        });
+    }
+
+    // Eleven kan først svare når lærer har skrevet et forslag.
+    if (!issue.teacherResponse) {
+        return res.status(400).render("error", {
+            message: "Du kan svare når lærer har skrevet en foreslått løsning."
+        });
+    }
+
+    // Lagrer elevens svar i saken.
+    await Issue.findByIdAndUpdate(req.params.id, {
+        studentResponse: req.body.studentResponse
+    });
+
+    res.redirect(`/issues/${req.params.id}`);
+});
+
 // Gjør routes tilgjengelig for app.js.
 module.exports = router;

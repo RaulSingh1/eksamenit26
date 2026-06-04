@@ -66,6 +66,20 @@ Felter:
 }
 ```
 
+```text
+POST /api/issues/:id/student-response
+```
+
+Elev kan svare på løsningen læreren har foreslått. Eleven kan bare svare på egne saker.
+
+Felter:
+
+```json
+{
+  "studentResponse": "Svar fra elev"
+}
+```
+
 ## Brukere
 
 ```text
