@@ -197,6 +197,12 @@ textarea::placeholder {
     color: #999999;
 }
 
+.form-help {
+    margin: 0 0 8px;
+    color: #666666;
+    font-size: 0.95rem;
+}
+
 textarea {
     resize: vertical;
 }

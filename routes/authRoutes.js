@@ -22,18 +22,12 @@ router.get("/register", (req, res) => {
 // Registrerer ny bruker.
 router.post("/register", async (req, res) => {
     // req.body inneholder data som er sendt inn fra registreringsskjemaet.
-    const { username, password, role } = req.body;
-    // Vanlige brukere kan bare registrere seg som elev eller lærer.
-    const allowedRoles = ["elev", "lærer"];
+    const { username, password } = req.body;
+    // Vanlige brukere kan bare registrere seg som elev.
+    // Lærerbrukere lages av admin, slik at elever ikke kan gi seg selv lærertilgang.
+    const role = "elev";
     // findOne sjekker om brukernavnet finnes fra før i MongoDB.
     const existingUser = await User.findOne({ username });
-
-    // includes sjekker om valgt rolle finnes i allowedRoles.
-    if (!allowedRoles.includes(role)) {
-        return res.render("register", {
-            error: "Du kan bare registrere elev eller lærer her."
-        });
-    }
 
     if (existingUser) {
         return res.render("register", {
