@@ -1,8 +1,5 @@
 // Henter Express, slik at vi kan lage routes.
 const express = require("express");
-// Henter middleware som sjekker innlogging og rolle.
-const { requireLogin, requireRole } = require("../middleware/auth");
-
 // Lager en egen router for vanlige sider.
 const router = express.Router();
 
@@ -13,10 +10,8 @@ router.get("/", (req, res) => {
 });
 
 // Viser FAQ/support-siden.
-// Bare elev og lærer får tilgang til denne siden.
-router.get("/support", requireLogin, requireRole(["elev", "lærer"]), (req, res) => {
-    // Før siden vises, sjekker requireLogin og requireRole tilgang.
-    // Hvis brukeren har tilgang, vises support.ejs.
+// Denne siden kan også vises før brukeren logger inn.
+router.get("/support", (req, res) => {
     res.render("support");
 });
 

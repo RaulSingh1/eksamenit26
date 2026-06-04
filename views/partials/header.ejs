@@ -13,11 +13,9 @@
 
             <nav class="nav-menu">
                 <a href="/">Forside</a>
+                <a href="/support">FAQ</a>
                 <% if (user) { %>
                     <a href="/issues">Saker</a>
-                    <% if (["elev", "lærer"].includes(user.role)) { %>
-                        <a href="/support">FAQ</a>
-                    <% } %>
 
                     <% if (user.role === "admin") { %>
                         <a href="/admin">Admin</a>

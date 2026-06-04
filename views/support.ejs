@@ -1,4 +1,5 @@
 <%- include("partials/header", { title: "FAQ | Eksamen IT 2026" }) %>
+<% const currentRole = user ? user.role : ""; %>
 
 <section class="page-title">
     <div class="container">
@@ -16,11 +17,14 @@
                 <li>Sjekk at du er logget inn med riktig bruker.</li>
                 <li>Prøv å laste siden på nytt.</li>
                 <li>Sjekk at saken du prøver å åpne finnes.</li>
-                <% if (user.role === "elev") { %>
+                <% if (currentRole === "elev") { %>
                     <li>Kontakt lærer hvis du mangler tilgang.</li>
                 <% } %>
-                <% if (user.role === "lærer") { %>
+                <% if (currentRole === "lærer") { %>
                     <li>Kontakt admin hvis du mangler tilgang.</li>
+                <% } %>
+                <% if (!currentRole) { %>
+                    <li>Logg inn eller registrer bruker hvis du skal bruke saker.</li>
                 <% } %>
             </ul>
         </article>
@@ -28,18 +32,21 @@
         <article class="admin-panel">
             <h2>Supportinformasjon</h2>
             <p><strong>System:</strong> Eksamen IT 2026</p>
-            <% if (user.role === "elev") { %>
+            <% if (currentRole === "elev") { %>
                 <p>Kontakt lærer hvis du ikke får logget inn, mangler tilgang eller ikke finner saken din.</p>
             <% } %>
-            <% if (user.role === "lærer") { %>
+            <% if (currentRole === "lærer") { %>
                 <p>Kontakt admin hvis du ikke får logget inn eller mangler tilgang.</p>
+            <% } %>
+            <% if (!currentRole) { %>
+                <p>Hvis du ikke er logget inn, kan du lese veiledningen her først.</p>
             <% } %>
             <p>Oppgi brukernavn og hva som feiler når du ber om hjelp.</p>
         </article>
     </div>
 
     <div class="container support-grid role-help-grid">
-        <% if (user.role === "elev") { %>
+        <% if (currentRole === "elev" || !currentRole) { %>
             <article class="admin-panel">
                 <h2>Brukerveiledning for elev</h2>
                 <ul class="simple-list">
@@ -53,7 +60,7 @@
             </article>
         <% } %>
 
-        <% if (user.role === "lærer") { %>
+        <% if (currentRole === "lærer") { %>
             <article class="admin-panel">
                 <h2>Brukerveiledning for lærer</h2>
                 <ul class="simple-list">
@@ -83,7 +90,7 @@
             <ul class="simple-list">
                 <li>Hvis du ikke får logget inn, sjekk brukernavn og passord.</li>
                 <li>Hvis du ikke finner en sak, gå tilbake til Saker.</li>
-                <li>Hvis du mangler tilgang, kontakt lærer eller admin.</li>
+                <li>Hvis du mangler tilgang, kontakt lærer eller IKT.</li>
                 <li>Hvis siden stopper, prøv å laste siden på nytt.</li>
                 <li>Hvis feilen fortsetter, forklar hva som skjedde og hvem du var logget inn som.</li>
             </ul>
@@ -184,13 +191,16 @@
                 <ol class="guide-steps">
                     <li>Les beskrivelsen av saken.</li>
                     <li>Se svaret eller forslaget fra lærer.</li>
-                    <% if (user.role === "elev") { %>
+                    <% if (currentRole === "elev") { %>
                         <li>Endre status hvis saken for eksempel er løst.</li>
                         <li>Skriv svar på forslaget fra lærer.</li>
                     <% } %>
-                    <% if (user.role === "lærer") { %>
+                    <% if (currentRole === "lærer") { %>
                         <li>Endre status når saken behandles.</li>
                         <li>Skriv eller oppdater svar til eleven.</li>
+                    <% } %>
+                    <% if (!currentRole) { %>
+                        <li>Logg inn for å endre status eller svare på saken.</li>
                     <% } %>
                 </ol>
             </div>
