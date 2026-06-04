@@ -44,6 +44,12 @@ Node.js-serveren viser nettsiden og sender eller henter data fra MongoDB-servere
 
 ## Nettverksdiagram
 
+Bildefil:
+
+```text
+docs/diagrams/ip-plan.svg
+```
+
 ```text
                  Bruker / nettleser
                          |

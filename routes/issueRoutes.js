@@ -1,27 +1,41 @@
+// Henter Express, slik at vi kan lage routes for saker.
 const express = require("express");
 
+// Henter Issue-modellen og tilgangskontroll.
 const Issue = require("../models/Issue");
 const { requireLogin, requireRole } = require("../middleware/auth");
 
+// Lager en egen router for saker.
 const router = express.Router();
+// Elever kan maks lage 5 saker.
 const MAX_ISSUES_PER_STUDENT = 5;
 
+// Viser saker.
+// Elever ser bare egne saker, mens lærer og admin ser alle.
 router.get("/issues", requireLogin, async (req, res) => {
+    // req.session.user.role sjekker rollen til brukeren som er logget inn.
     const filter = req.session.user.role === "elev"
         ? { createdBy: req.session.user.id }
         : {};
 
+    // Issue.find henter saker fra MongoDB.
     const issues = await Issue.find(filter)
+        // populate henter brukernavn og rolle fra User-modellen.
         .populate("createdBy", "username role")
+        // sort({ createdAt: -1 }) viser nyeste saker først.
         .sort({ createdAt: -1 });
 
+    // res.render viser issues.ejs og sender med sakene.
     res.render("issues", {
         issues
     });
 });
 
+// Viser skjema for ny sak.
+// Elev stoppes hvis eleven allerede har 5 saker.
 router.get("/issues/new", requireLogin, requireRole(["elev", "admin"]), async (req, res) => {
     if (req.session.user.role === "elev") {
+        // countDocuments teller hvor mange saker eleven allerede har.
         const issueCount = await Issue.countDocuments({
             createdBy: req.session.user.id
         });
@@ -33,14 +47,18 @@ router.get("/issues/new", requireLogin, requireRole(["elev", "admin"]), async (r
         }
     }
 
+    // Viser skjemaet for å lage ny sak.
     res.render("new_issue", {
         error: ""
     });
 });
 
+// Lagrer en ny sak i databasen.
 router.post("/issues", requireLogin, requireRole(["elev", "admin"]), async (req, res) => {
+    // req.body henter data fra skjemaet.
     const { title, description, category } = req.body;
 
+    // Sjekker maksgrensen før saken lagres.
     if (req.session.user.role === "elev") {
         const issueCount = await Issue.countDocuments({
             createdBy: req.session.user.id
@@ -53,12 +71,14 @@ router.post("/issues", requireLogin, requireRole(["elev", "admin"]), async (req,
         }
     }
 
+    // Sjekker at alle feltene er fylt ut.
     if (!title || !description || !category) {
         return res.render("new_issue", {
             error: "Alle feltene må fylles ut."
         });
     }
 
+    // Issue.create lagrer saken i MongoDB.
     await Issue.create({
         title,
         description,
@@ -66,12 +86,16 @@ router.post("/issues", requireLogin, requireRole(["elev", "admin"]), async (req,
         createdBy: req.session.user.id
     });
 
+    // Sender brukeren tilbake til saksoversikten.
     res.redirect("/issues");
 });
 
+// Viser en bestemt sak.
 router.get("/issues/:id", requireLogin, async (req, res) => {
+    // req.params.id henter id-en fra URL-en.
     const issue = await Issue.findById(req.params.id).populate("createdBy", "username role");
 
+    // Hvis saken ikke finnes, vises en 404-feil.
     if (!issue) {
         return res.status(404).render("error", {
             message: "Saken finnes ikke."
@@ -81,19 +105,25 @@ router.get("/issues/:id", requireLogin, async (req, res) => {
     const ownsIssue = issue.createdBy._id.toString() === req.session.user.id;
     const canSeeAll = ["lærer", "admin"].includes(req.session.user.role);
 
+    // Elev kan bare åpne egne saker.
     if (!ownsIssue && !canSeeAll) {
         return res.status(403).render("error", {
             message: "Du har ikke tilgang til denne saken."
         });
     }
 
+    // Viser detaljsiden for saken.
     res.render("issue_detail", {
         issue
     });
 });
 
+// Endrer status på en sak.
+// Elev kan endre egen sak, mens lærer og admin kan endre alle saker.
 router.post("/issues/:id/status", requireLogin, async (req, res) => {
+    // Finner saken som skal få ny status.
     const issue = await Issue.findById(req.params.id);
+    // allowedStatuses er listen med statuser som er lov i systemet.
     const allowedStatuses = ["åpen", "under arbeid", "løst"];
 
     if (!issue) {
@@ -102,6 +132,7 @@ router.post("/issues/:id/status", requireLogin, async (req, res) => {
         });
     }
 
+    // Stopper status som ikke finnes i systemet.
     if (!allowedStatuses.includes(req.body.status)) {
         return res.status(400).render("error", {
             message: "Ugyldig status."
@@ -121,10 +152,13 @@ router.post("/issues/:id/status", requireLogin, async (req, res) => {
         status: req.body.status
     });
 
+    // Sender brukeren tilbake til samme sak etter oppdatering.
     res.redirect(`/issues/${req.params.id}`);
 });
 
+// Lærer og admin kan skrive svar på en sak.
 router.post("/issues/:id/teacher-response", requireLogin, requireRole(["lærer", "admin"]), async (req, res) => {
+    // Oppdaterer teacherResponse-feltet med teksten fra skjemaet.
     await Issue.findByIdAndUpdate(req.params.id, {
         teacherResponse: req.body.teacherResponse
     });
@@ -132,4 +166,5 @@ router.post("/issues/:id/teacher-response", requireLogin, requireRole(["lærer",
     res.redirect(`/issues/${req.params.id}`);
 });
 
+// Gjør routes tilgjengelig for app.js.
 module.exports = router;

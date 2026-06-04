@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+  <rect width="1200" height="720" fill="#f5f5f5"/>
+
+  <text x="600" y="60" text-anchor="middle" font-family="Arial, sans-serif" font-size="34" font-weight="700" fill="#222222">
+    IP-plan - Eksamen IT 2026
+  </text>
+
+  <rect x="70" y="125" width="300" height="170" rx="8" fill="#ffffff" stroke="#222222" stroke-width="2"/>
+  <text x="220" y="165" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#222222">
+    Bruker
+  </text>
+  <text x="220" y="205" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#333333">
+    Nettleser / klient
+  </text>
+  <text x="220" y="240" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" fill="#333333">
+    Åpner nettsiden
+  </text>
+
+  <rect x="450" y="105" width="320" height="210" rx="8" fill="#eaf2ff" stroke="#1f5fbf" stroke-width="3"/>
+  <text x="610" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#1f3f78">
+    VM: eksamen2
+  </text>
+  <text x="610" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#222222">
+    IP: 10.12.13.217
+  </text>
+  <text x="610" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" fill="#222222">
+    Node.js + Express + EJS
+  </text>
+  <text x="610" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" fill="#222222">
+    API-routes
+  </text>
+  <text x="610" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1f5fbf">
+    Port 3000 HTTP
+  </text>
+
+  <rect x="850" y="105" width="300" height="210" rx="8" fill="#eaf8ee" stroke="#1f7a3a" stroke-width="3"/>
+  <text x="1000" y="145" text-anchor="middle" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#245c35">
+    VM: eksamen1
+  </text>
+  <text x="1000" y="180" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#222222">
+    IP: 10.12.13.216
+  </text>
+  <text x="1000" y="220" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" fill="#222222">
+    MongoDB database
+  </text>
+  <text x="1000" y="250" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" fill="#222222">
+    Users, Issues, AuthLogs
+  </text>
+  <text x="1000" y="285" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1f7a3a">
+    Port 27017 TCP
+  </text>
+
+  <line x1="370" y1="210" x2="450" y2="210" stroke="#1f5fbf" stroke-width="4"/>
+  <polygon points="450,210 432,200 432,220" fill="#1f5fbf"/>
+  <text x="410" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" fill="#222222">
+    HTTP 3000
+  </text>
+
+  <line x1="770" y1="210" x2="850" y2="210" stroke="#1f7a3a" stroke-width="4"/>
+  <polygon points="850,210 832,200 832,220" fill="#1f7a3a"/>
+  <text x="810" y="190" text-anchor="middle" font-family="Arial, sans-serif" font-size="17" fill="#222222">
+    MongoDB 27017
+  </text>
+
+  <rect x="90" y="390" width="1020" height="230" rx="8" fill="#ffffff" stroke="#cccccc" stroke-width="2"/>
+  <text x="125" y="430" font-family="Arial, sans-serif" font-size="23" font-weight="700" fill="#222222">
+    Forklaring
+  </text>
+  <text x="125" y="470" font-family="Arial, sans-serif" font-size="19" fill="#222222">
+    1. Brukeren åpner nettsiden på Node.js-serveren: http://10.12.13.217:3000
+  </text>
+  <text x="125" y="510" font-family="Arial, sans-serif" font-size="19" fill="#222222">
+    2. Node.js-serveren kjører Express, EJS og API-et.
+  </text>
+  <text x="125" y="550" font-family="Arial, sans-serif" font-size="19" fill="#222222">
+    3. Node.js kobler til MongoDB-serveren med: mongodb://10.12.13.216:27017/eksamenit26
+  </text>
+  <text x="125" y="590" font-family="Arial, sans-serif" font-size="19" fill="#222222">
+    4. MongoDB lagrer brukere, saker og autentiseringslogger.
+  </text>
+
+  <text x="600" y="675" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" fill="#555555">
+    Trafikkflyt: Bruker -> eksamen2 Node.js -> eksamen1 MongoDB
+  </text>
+</svg>
